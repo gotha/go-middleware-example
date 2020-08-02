@@ -10,17 +10,25 @@ import (
 )
 
 func main() {
-
 	fmt.Printf("%+v\n", "hi there")
 
 	r := mux.NewRouter()
 
-	var mainHandler http.Handler
-	mainHandler = loggingMiddleware()
-	mainHandler = newMainHandler(mainHandler)
-	mainHandler = thirdMiddleware(mainHandler)
-	mainHandler = secondMiddleware(mainHandler)
-	mainHandler = firstMiddleware(mainHandler)
+	mainHandler := Chain(
+		firstMiddleware,
+		secondMiddleware,
+		thirdMiddleware,
+		newMainHandler,
+		loggingMiddleware,
+	)(nopMiddleware())
+
+	// chain middlewarez the native way
+	//var mainHandler http.Handler
+	//mainHandler = loggingMiddleware(dummyHandler())
+	//mainHandler = newMainHandler(mainHandler)
+	//mainHandler = thirdMiddleware(mainHandler)
+	//mainHandler = secondMiddleware(mainHandler)
+	//mainHandler = firstMiddleware(mainHandler)
 	r.Handle("/", mainHandler)
 
 	http.Handle("/", r)

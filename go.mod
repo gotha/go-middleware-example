@@ -1,4 +1,4 @@
-module github.com/gotha/middlware-example
+module github.com/gotha/middleware-example
 
 go 1.14
 
